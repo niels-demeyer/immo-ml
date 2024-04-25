@@ -26,6 +26,13 @@ class WebScraper:
         # Get the links of the houses per provinces
         for province, url in self.provinces_links.items():
             self.go_to_url(url)
+            self.accept_cookies()
             self.provinces_links[province] = self.page.url  # Changed this line
             time.sleep(3)
         self.close()
+    def accept_cookies(self):
+        # Check if the cookies button is present
+        cookies_button = self.page.query_selector('button[data-testid="uc-accept-all-button"]')
+        if cookies_button:
+            # If the button is present, click it
+            cookies_button.click()
