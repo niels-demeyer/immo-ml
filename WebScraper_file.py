@@ -33,6 +33,26 @@ class WebScraper:
                 time.sleep(3)
                 self.get_links()
             self.close()
+    def scrape_individual_house(self, url):
+        self.go_to_url(url)
+        self.accept_cookies()
+        # Get the details of the house
+        house_details = {}
+        # Find all tables
+        tables = self.page.query_selector_all('.classified-table')
+        for table in tables:
+            # Iterate over the rows in the table
+            rows = table.query_selector_all('tbody.classified-table__body tr.classified-table__row')
+            for row in rows:
+                # Get the cells in the row
+                cells = row.query_selector_all('td.classified-table__data, th.classified-table__header')
+                if len(cells) >= 2:
+                    # If the row has at least two cells, add the data to the dictionary
+                    key = cells[0].inner_text().strip()
+                    value = cells[1].inner_text().strip()
+                    house_details[key] = value
+        return house_details
+    
     def accept_cookies(self):
         # Check if the cookies button is present
         cookies_button = self.page.query_selector('button[data-testid="uc-accept-all-button"]')
