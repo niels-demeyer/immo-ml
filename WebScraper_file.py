@@ -8,6 +8,10 @@ class WebScraper:
         self.browser = self.playwright.chromium.launch(headless=False)
         self.page = self.browser.new_page()
         self.provinces = ["oost-vlaanderen", "west-vlaanderen", "antwerpen", "limburg", "vlaams-brabant", "brussel", "waals-brabant", "henegouwen", "luik", "luxemburg", "namen"]
-    def get_links_per_province(self):
+        self.provinces_links = {}
+    def construct_links_per_province(self):
         # Get the links of the houses per provinces
-        
+        for i in self.provinces:
+            url = f"https://www.immoweb.be/en/search/house/for-sale/{i}/province?countries=BE&page=1&orderBy=relevance"
+            self.provinces_links[i] = url
+    
