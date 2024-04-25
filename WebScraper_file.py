@@ -27,12 +27,11 @@ class WebScraper:
         for province, url in self.provinces_links.items():
             self.go_to_url(url)
             self.accept_cookies()
-            while True:
+            # Keep scraping and going to the next page until there are no more pages
+            while self.go_next_page():
                 self.provinces_links[province] = self.page.url
                 time.sleep(3)
-                if not self.go_next_page():
-                    break
-        self.close()
+            self.close()
     def accept_cookies(self):
         # Check if the cookies button is present
         cookies_button = self.page.query_selector('button[data-testid="uc-accept-all-button"]')
@@ -46,3 +45,5 @@ class WebScraper:
             # If the link is present, get its href attribute and navigate to it
             next_page_url = next_page_link.get_attribute('href')
             self.go_to_url(next_page_url)
+            return True  # Return True when the next page link is present
+        return False  # Return False when the next page link is not present
