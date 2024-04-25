@@ -31,6 +31,7 @@ class WebScraper:
             while self.go_next_page():
                 self.provinces_links[province] = self.page.url
                 time.sleep(3)
+                self.get_links()
             self.close()
     def accept_cookies(self):
         # Check if the cookies button is present
@@ -51,4 +52,5 @@ class WebScraper:
         # Get the links of the houses
         houses = self.page.query_selector_all('a.card__title-link')
         links = [house.get_attribute('href') for house in houses]
+        print(links)
         return links
