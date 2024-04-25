@@ -27,7 +27,7 @@ class WebScraper:
         for province, url in self.provinces_links.items():
             self.go_to_url(url)
             self.accept_cookies()
-            self.provinces_links[province] = self.page.url  # Changed this line
+            self.provinces_links[province] = self.page.url 
             time.sleep(3)
         self.close()
     def accept_cookies(self):
