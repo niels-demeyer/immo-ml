@@ -47,3 +47,8 @@ class WebScraper:
             self.go_to_url(next_page_url)
             return True  # Return True when the next page link is present
         return False  # Return False when the next page link is not present
+    def get_links(self):
+        # Get the links of the houses
+        houses = self.page.query_selector_all('a.card__title-link')
+        links = [house.get_attribute('href') for house in houses]
+        return links
