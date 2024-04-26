@@ -1,0 +1,9 @@
+version: "3"
+services:
+  my-scrapy-project:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app/scrapy/immoweb
+    command: scrapy crawl most_expensive -o output.json
