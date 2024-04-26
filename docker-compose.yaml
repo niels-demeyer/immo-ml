@@ -1,9 +1,9 @@
 version: "3"
 services:
-  my-scrapy-project:
+  immoweb_scraper:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: .Dockerfile
     volumes:
-      - .:/app/scrapy/immoweb
-    command: scrapy crawl most_expensive -o output.json
+      - .:/app
+    command: scrapy crawl most_expensive -o output_docker_urls.json
