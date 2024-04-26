@@ -6,8 +6,46 @@
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
+from dotenv import load_dotenv
+import os
+import psycopg2
+
+load_dotenv()
+port = os.getenv("DB_PORT")
+password = os.getenv("DB_PASS")
+database = os.getenv("DB_NAME")
+user = os.getenv("DB_USER")
+host = os.getenv("DB_HOST")
 
 
 class ImmowebPipeline:
+    def open_spider(self, spider):
+        self.connection = psycopg2.connect(
+            host=host, database=database, user=user, password=password, port=port
+        )
+        self.cursor = self.connection.cursor()
+        self.cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS most_expensive (
+                id SERIAL PRIMARY KEY,
+                url VARCHAR(255) UNIQUE,
+                typeHouse VARCHAR(255)
+            )
+        """
+        )
+        self.connection.commit()
+
     def process_item(self, item, spider):
+        self.cursor.execute(
+            """
+            INSERT INTO most_expensive (url, typeHouse) VALUES (%s, %s)
+            ON CONFLICT (url) DO NOTHING
+            """,
+            (item["href"], item["title"]),
+        )
+        self.connection.commit()
         return item
+
+    def close_spider(self, spider):
+        self.cursor.close()
+        self.connection.close()
