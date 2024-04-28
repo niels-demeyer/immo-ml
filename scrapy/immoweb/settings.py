@@ -19,6 +19,8 @@ NEWSPIDER_MODULE = "immoweb.spiders"
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
+# Configure logging
+LOG_LEVEL = "DEBUG"
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
 
