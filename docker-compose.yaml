@@ -1,9 +1,0 @@
-version: "3"
-services:
-  immoweb_scraper:
-    build:
-      context: .
-      dockerfile: .Dockerfile
-    volumes:
-      - .:/app
-    command: scrapy crawl most_expensive -o output_docker_urls.json
