@@ -32,6 +32,7 @@ class ImmowebPipeline:
                 id SERIAL PRIMARY KEY,
                 url VARCHAR(255) UNIQUE,
                 typeHouse VARCHAR(255)
+                checked BOOLEAN DEFAULT FALSE
             )
         """
         )
