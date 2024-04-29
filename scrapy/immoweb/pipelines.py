@@ -20,6 +20,8 @@ host = os.getenv("DB_HOST")
 
 class ImmowebPipeline:
     def open_spider(self, spider):
+        if spider.name != "most_expensive":
+            return
         self.connection = psycopg2.connect(
             host=host, database=database, user=user, password=password, port=port
         )
@@ -29,13 +31,16 @@ class ImmowebPipeline:
             CREATE TABLE IF NOT EXISTS most_expensive (
                 id SERIAL PRIMARY KEY,
                 url VARCHAR(255) UNIQUE,
-                typeHouse VARCHAR(255)
+                typeHouse VARCHAR(255),
+                checked BOOLEAN DEFAULT FALSE
             )
         """
         )
         self.connection.commit()
 
     def process_item(self, item, spider):
+        if spider.name != "most_expensive":
+            return item
         self.cursor.execute(
             """
             INSERT INTO most_expensive (url, typeHouse) VALUES (%s, %s)
@@ -47,5 +52,7 @@ class ImmowebPipeline:
         return item
 
     def close_spider(self, spider):
+        if spider.name != "most_expensive":
+            return
         self.cursor.close()
         self.connection.close()
