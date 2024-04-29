@@ -1,10 +1,3 @@
-import hrequests
-from bs4 import BeautifulSoup
-import json
-from selectolax.parser import HTMLParser
-import concurrent.futures
-
-
 class ExtractPage:
     """
     Extracts a json from the page's html where we have all the characteristics of a property.
@@ -65,6 +58,12 @@ class ExtractPage:
         return self.raw and (
             self.raw["cluster"] == "null" or self.raw["cluster"] is None
         )
+
+    def check_and_return_single_listing(self):
+        if self.is_single_listing():
+            return self.raw
+        else:
+            return None
 
     def to_dict(self):
         return {

@@ -14,7 +14,7 @@ user = os.getenv("DB_USER")
 host = os.getenv("DB_HOST")
 
 # Create an instance of FileUtils
-file_utils = FileUtils(database, user, password, host, port)
+file_utils = FileUtils()
 
 # Create an instance of ExtractPage with a URL
 page = ExtractPage("https://www.immoweb.be/en/classified/house/for-sale/sint-martens-latem/9830/11238297")
