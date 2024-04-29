@@ -4,7 +4,6 @@ import os
 import pandas as pd
 import glob
 from dotenv import load_dotenv
-import os
 import psycopg2
 
 load_dotenv()
@@ -14,13 +13,20 @@ database = os.getenv("DB_NAME")
 user = os.getenv("DB_USER")
 host = os.getenv("DB_HOST")
 
-
+# Create an instance of FileUtils
+file_utils = FileUtils(database, user, password, host, port)
 
 # Create an instance of ExtractPage with a URL
 page = ExtractPage("https://www.immoweb.be/en/classified/house/for-sale/sint-martens-latem/9830/11238297")
 
-# Print the raw data
-print(page.raw)
+# Get the raw data
+raw_data = page.raw
 
-# Print whether it's a single listing
-print(page.single)
+# Write the raw data to the PostgreSQL database
+file_utils.write_dict_to_postgres('raw_data_table', raw_data)
+
+# Get whether it's a single listing
+single = page.single
+
+# Write the single data to the PostgreSQL database
+file_utils.write_dict_to_postgres('single_data_table', {'single': single})
