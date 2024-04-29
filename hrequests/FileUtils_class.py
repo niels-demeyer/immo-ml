@@ -74,7 +74,7 @@ class FileUtils:
         urls = cur.fetchall()
         conn.close()
         return urls
-    
+    @staticmethod
     def set_checked(url):
         conn = psycopg2.connect(
             dbname=database,
@@ -132,7 +132,8 @@ class FileUtils:
             try:
                 cur.execute(sql, values)
             except psycopg2.errors.UndefinedColumn:
-                # If a column does not exist, create it and try again
+                # If a column does not exist, rollback the transaction, create it and try again
+                conn.rollback()
                 for key in normalized_keys:
                     cur.execute(f"ALTER TABLE {table_name} ADD COLUMN IF NOT EXISTS {key} text")
                 cur.execute(sql, values)
