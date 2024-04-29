@@ -59,6 +59,34 @@ class FileUtils:
                     writer.writerow(flat_data)
         except UnicodeEncodeError as e:
             print(f"UnicodeEncodeError: {e}")
+            
+    @staticmethod
+    def get_unchecked_urls():
+        conn = psycopg2.connect(
+            dbname=database,
+            user=user,
+            password=password,
+            host=host,
+            port=port
+        )
+        cur = conn.cursor()
+        cur.execute("SELECT url FROM most_expensive WHERE checked = FALSE")
+        urls = cur.fetchall()
+        conn.close()
+        return urls
+    
+    def set_checked(url):
+        conn = psycopg2.connect(
+            dbname=database,
+            user=user,
+            password=password,
+            host=host,
+            port=port
+        )
+        cur = conn.cursor()
+        cur.execute("UPDATE most_expensive SET checked = TRUE WHERE url = %s", (url,))
+        conn.commit()
+        conn.close()
     @staticmethod
     def write_dict_to_postgres(table_name, data):
         # Create a connection to the PostgreSQL database
