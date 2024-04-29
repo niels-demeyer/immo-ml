@@ -129,12 +129,17 @@ class FileUtils:
             values = [normalized_data.get(key, None) for key in normalized_keys]
             placeholders = ", ".join("%s" for _ in normalized_keys)
             sql = f"INSERT INTO {table_name} ({', '.join(normalized_keys)}) VALUES ({placeholders})"
-            cur.execute(sql, values)
+            try:
+                cur.execute(sql, values)
+            except psycopg2.errors.UndefinedColumn:
+                # If a column does not exist, create it and try again
+                for key in normalized_keys:
+                    cur.execute(f"ALTER TABLE {table_name} ADD COLUMN IF NOT EXISTS {key} text")
+                cur.execute(sql, values)
 
         # Commit changes and close connection
         conn.commit()
         conn.close()
-
     @staticmethod
     def write_dict_to_sqlite(db_path, table_name, data):
         # Create a connection to the SQLite database

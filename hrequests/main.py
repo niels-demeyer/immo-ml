@@ -51,6 +51,7 @@ for url in unchecked_urls:
     # For example, you can write them to a PostgreSQL database using the FileUtils class
     if single_listing_data is not None:
         file_utils.write_dict_to_postgres('raw_data_table', page_dict)
+    pprint(page_dict)
 
     # Set the URL as checked in the database
     file_utils.set_checked(url[0])
