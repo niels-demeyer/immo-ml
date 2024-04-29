@@ -15,18 +15,19 @@ host = os.getenv("DB_HOST")
 
 # Create an instance of FileUtils
 file_utils = FileUtils()
-
 # Create an instance of ExtractPage with a URL
 page = ExtractPage("https://www.immoweb.be/en/classified/house/for-sale/sint-martens-latem/9830/11238297")
 
 # Get the raw data
-raw_data = page.raw
+raw_data = page.get_raw_data()
 
-# Write the raw data to the PostgreSQL database
-file_utils.write_dict_to_postgres('raw_data_table', raw_data)
+# Check if it's a single listing and get the raw data if it is
+single_listing_data = page.check_and_return_single_listing()
 
-# Get whether it's a single listing
-single = page.single
+# Convert the page data to a dictionary
+page_dict = page.to_dict()
 
-# Write the single data to the PostgreSQL database
-file_utils.write_dict_to_postgres('single_data_table', {'single': single})
+# Now you can use raw_data, single_listing_data, and page_dict as needed
+# For example, you can write them to a PostgreSQL database using the FileUtils class
+if single_listing_data is not None:
+    file_utils.write_dict_to_postgres('raw_data_table', single_listing_data)

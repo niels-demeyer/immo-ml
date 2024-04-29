@@ -1,3 +1,10 @@
+import hrequests
+from bs4 import BeautifulSoup
+import json
+from selectolax.parser import HTMLParser
+import concurrent.futures
+
+
 class ExtractPage:
     """
     Extracts a json from the page's html where we have all the characteristics of a property.

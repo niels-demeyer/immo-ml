@@ -59,7 +59,7 @@ class FileUtils:
                     writer.writerow(flat_data)
         except UnicodeEncodeError as e:
             print(f"UnicodeEncodeError: {e}")
-            
+    @staticmethod
     def write_dict_to_postgres(table_name, data):
         # Create a connection to the PostgreSQL database
         conn = psycopg2.connect(
