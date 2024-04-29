@@ -3,6 +3,17 @@ import shutil
 import json
 import csv
 import sqlite3
+import os
+import psycopg2
+from dotenv import load_dotenv
+
+load_dotenv()
+port = os.getenv("DB_PORT")
+password = os.getenv("DB_PASS")
+database = os.getenv("DB_NAME")
+user = os.getenv("DB_USER")
+host = os.getenv("DB_HOST")
+
 
 
 class FileUtils:
@@ -48,6 +59,53 @@ class FileUtils:
                     writer.writerow(flat_data)
         except UnicodeEncodeError as e:
             print(f"UnicodeEncodeError: {e}")
+            
+    def write_dict_to_postgres(table_name, data):
+        # Create a connection to the PostgreSQL database
+        conn = psycopg2.connect(
+            dbname=database,
+            user=user,
+            password=password,
+            host=host,
+            port=port
+        )
+
+        # Create a cursor object
+        cur = conn.cursor()
+
+        # Check if data is a list
+        if isinstance(data, list):
+            # Flatten each dictionary in the list
+            flat_data_list = [FileUtils.flatten_dict(item) for item in data]
+        else:
+            # If data is not a list, assume it's a dictionary and flatten it
+            flat_data_list = [FileUtils.flatten_dict(data)]
+
+        # Normalize keys and get all keys used in any dictionary
+        all_keys = set().union(*(d.keys() for d in flat_data_list))
+        normalized_keys = [key.strip().lower() for key in all_keys]
+
+        # Create table if not exists
+        columns = ", ".join(f"{key} text" for key in normalized_keys)
+        cur.execute(
+            f"CREATE TABLE IF NOT EXISTS {table_name} ({columns})"
+        )
+
+        # Insert data into table
+        for flat_data in flat_data_list:
+            # Normalize keys in flat_data
+            normalized_data = {
+                key.strip().lower(): value for key, value in flat_data.items()
+            }
+            # Ensure normalized_data has a value for each key in normalized_keys
+            values = [normalized_data.get(key, None) for key in normalized_keys]
+            placeholders = ", ".join("%s" for _ in normalized_keys)
+            sql = f"INSERT INTO {table_name} ({', '.join(normalized_keys)}) VALUES ({placeholders})"
+            cur.execute(sql, values)
+
+        # Commit changes and close connection
+        conn.commit()
+        conn.close()
 
     @staticmethod
     def write_dict_to_sqlite(db_path, table_name, data):
