@@ -31,7 +31,7 @@ class ImmowebPipeline:
             CREATE TABLE IF NOT EXISTS most_expensive (
                 id SERIAL PRIMARY KEY,
                 url VARCHAR(255) UNIQUE,
-                typeHouse VARCHAR(255)
+                typeHouse VARCHAR(255),
                 checked BOOLEAN DEFAULT FALSE
             )
         """
