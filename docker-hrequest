@@ -5,7 +5,7 @@ FROM python:3.8-slim-buster
 WORKDIR /app
 
 # Install Scrapy
-RUN pip install hrequests[all] python-dotenv psycopg2-binary
+RUN pip install hrequests[all] python-dotenv psycopg2-binary bs4
 
 # Copy the current directory contents into the container at /app
 COPY . /app

@@ -34,7 +34,7 @@ class ImmowebPipeline:
                 typeHouse VARCHAR(255),
                 checked BOOLEAN DEFAULT FALSE
             )
-        """
+            """
         )
         self.connection.commit()
 
