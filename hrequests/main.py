@@ -3,6 +3,9 @@ from FileUtils_class import FileUtils
 import os
 from dotenv import load_dotenv
 from pprint import pprint
+import time
+import random
+
 
 load_dotenv()
 port = os.getenv("DB_PORT")
@@ -32,6 +35,8 @@ unchecked_urls = file_utils.get_unchecked_urls()
 
 # Loop through each unchecked URL
 for url in unchecked_urls:
+    sleep_time = random.randint(1, 5)
+    time.sleep(sleep_time)
     # Create an instance of ExtractPage with the URL
     page = ExtractPage(
         url[0]
