@@ -15,7 +15,6 @@ user = os.getenv("DB_USER")
 host = os.getenv("DB_HOST")
 
 
-
 class FileUtils:
     @staticmethod
     def flatten_dict(d, parent_key="", sep="_"):
@@ -59,43 +58,35 @@ class FileUtils:
                     writer.writerow(flat_data)
         except UnicodeEncodeError as e:
             print(f"UnicodeEncodeError: {e}")
-            
+
     @staticmethod
     def get_unchecked_urls():
         conn = psycopg2.connect(
-            dbname=database,
-            user=user,
-            password=password,
-            host=host,
-            port=port
+            dbname=database, user=user, password=password, host=host, port=port
         )
         cur = conn.cursor()
-        cur.execute("SELECT url FROM most_expensive WHERE checked = FALSE")
+        cur.execute(
+            "SELECT url FROM most_expensive WHERE (checked = FALSE OR checked IS NULL) 10"
+        )
         urls = cur.fetchall()
         conn.close()
         return urls
+
     @staticmethod
     def set_checked(url):
         conn = psycopg2.connect(
-            dbname=database,
-            user=user,
-            password=password,
-            host=host,
-            port=port
+            dbname=database, user=user, password=password, host=host, port=port
         )
         cur = conn.cursor()
         cur.execute("UPDATE most_expensive SET checked = TRUE WHERE url = %s", (url,))
         conn.commit()
         conn.close()
+
     @staticmethod
     def write_dict_to_postgres(table_name, data):
         # Create a connection to the PostgreSQL database
         conn = psycopg2.connect(
-            dbname=database,
-            user=user,
-            password=password,
-            host=host,
-            port=port
+            dbname=database, user=user, password=password, host=host, port=port
         )
 
         # Create a cursor object
@@ -115,9 +106,7 @@ class FileUtils:
 
         # Create table if not exists
         columns = ", ".join(f"{key} text" for key in normalized_keys)
-        cur.execute(
-            f"CREATE TABLE IF NOT EXISTS {table_name} ({columns})"
-        )
+        cur.execute(f"CREATE TABLE IF NOT EXISTS {table_name} ({columns})")
 
         # Insert data into table
         for flat_data in flat_data_list:
@@ -135,12 +124,15 @@ class FileUtils:
                 # If a column does not exist, rollback the transaction, create it and try again
                 conn.rollback()
                 for key in normalized_keys:
-                    cur.execute(f"ALTER TABLE {table_name} ADD COLUMN IF NOT EXISTS {key} text")
+                    cur.execute(
+                        f"ALTER TABLE {table_name} ADD COLUMN IF NOT EXISTS {key} text"
+                    )
                 cur.execute(sql, values)
 
         # Commit changes and close connection
         conn.commit()
         conn.close()
+
     @staticmethod
     def write_dict_to_sqlite(db_path, table_name, data):
         # Create a connection to the SQLite database

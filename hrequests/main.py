@@ -78,7 +78,8 @@ for url in unchecked_urls:
             file_utils.write_dict_to_postgres("raw_data_table", page_dict)
         pprint(page_dict)
 
-        # Set the URL as checked in the database
-        file_utils.set_checked(url[0])
     except Exception as e:
         logging.error("Failed to process URL " + url[0] + ": " + str(e))
+    finally:
+        # Set the URL as checked in the database
+        file_utils.set_checked(url[0])
