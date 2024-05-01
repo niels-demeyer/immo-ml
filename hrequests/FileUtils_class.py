@@ -66,7 +66,7 @@ class FileUtils:
         )
         cur = conn.cursor()
         cur.execute(
-            "SELECT url FROM most_expensive WHERE (checked = FALSE OR checked IS NULL) 10"
+            "SELECT url FROM most_expensive WHERE (checked = FALSE OR checked IS NULL) LIMIT 50"
         )
         urls = cur.fetchall()
         conn.close()
