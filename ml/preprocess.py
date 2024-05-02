@@ -1,8 +1,8 @@
-from mlclass_file import MLClass
+from PreMl_file import PreMl
 from helperfunctions_file import HelperFunctions
 from pprint import pprint
 
-ml = MLClass()
+ml = PreMl()
 help = HelperFunctions()
 
 

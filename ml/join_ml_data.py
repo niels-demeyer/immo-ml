@@ -1,5 +1,5 @@
-from ml.mlclass_file import MLClass
+from PreMl_file import PreMl
 from pprint import pprint
 
-ml = MLClass()
+ml = PreMl()
 ml.join_ml_data()

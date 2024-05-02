@@ -1,7 +1,7 @@
-from ml.mlclass_file import MLClass
+from PreMl_file import PreMl
 from pprint import pprint
 
-ml = MLClass()
+ml = PreMl()
 data = ml.get_data(
     "raw_data_table",
     "raw_property_type, "

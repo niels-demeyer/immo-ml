@@ -6,7 +6,7 @@ from psycopg2.extras import DictCursor
 load_dotenv()
 
 
-class MLClass:
+class PreMl:
     def __init__(self):
         self.conn = psycopg2.connect(
             dbname=os.getenv("DB_NAME"),
