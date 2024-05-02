@@ -97,7 +97,7 @@ class MLClass:
             # Create table if it doesn't exist
             create_table_query = """
             CREATE TABLE IF NOT EXISTS pre_ml_data (
-                url TEXT,
+                url TEXT PRIMARY KEY,
                 price INTEGER,
                 bathroom_count INTEGER,
                 building_condition TEXT,
@@ -112,7 +112,13 @@ class MLClass:
                 district TEXT,
                 locality TEXT,
                 postal_code INTEGER,
-                net_habitable_surface INTEGER
+                net_habitable_surface INTEGER,
+                room_count INTEGER,
+                property_subtype TEXT,
+                property_type TEXT,
+                renovation_obligation BOOLEAN,
+                cadastral_income INTEGER,
+                is_furnished BOOLEAN
             );
             """
             self.cur.execute(create_table_query)
@@ -122,7 +128,10 @@ class MLClass:
                 placeholders = ", ".join(["%s"] * len(row))
                 columns = ", ".join(row.keys())
                 values = tuple(row.values())
-                query = f"INSERT INTO pre_ml_data ({columns}) VALUES ({placeholders})"
+                query = f"""
+                INSERT INTO pre_ml_data ({columns}) VALUES ({placeholders})
+                ON CONFLICT (url) DO NOTHING
+                """
                 self.cur.execute(query, values)
 
             # Commit the changes
