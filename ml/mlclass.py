@@ -65,16 +65,8 @@ class MLClass:
                 'raw_transaction_sale_isfurnished'
             ]
 
-            # Get column types for the specified columns
-            self.cur.execute("""
-                SELECT column_name, data_type 
-                FROM information_schema.columns 
-                WHERE table_name = 'raw_data_table' AND column_name IN %s
-            """, (tuple(columns_to_join),))
-            columns_info = self.cur.fetchall()
-            columns = ', '.join([f"{col[0]} {col[1]}" for col in columns_info])
-
-            # Create new table with the same column types
+            # Create new table with all columns set to TEXT
+            columns = ', '.join([f"{col} TEXT" for col in columns_to_join])
             create_table_query = f"""
             CREATE TABLE IF NOT EXISTS ml_data (
                 {columns}
