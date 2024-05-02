@@ -35,3 +35,66 @@ class MLClass:
         except Exception as e:
             print(f"An error occurred: {e}")
             return []
+        
+    def join_ml_data(self):
+        try:
+            self.cur = self.conn.cursor(cursor_factory=DictCursor)
+            
+            # Specify the columns to join
+            columns_to_join = [
+                'raw_price_accessibilityprice',
+                'raw_property_bathroomcount',
+                'raw_property_building_condition',
+                'raw_property_building_constructionyear',
+                'raw_property_constructionpermit_floodzonetype',
+                'raw_property_energy_heatingtype',
+                'raw_property_gardensurface',
+                'raw_property_hasbasement',
+                'raw_property_hasswimmingpool',
+                'raw_property_hasterrace',
+                'raw_property_land_surface',
+                'raw_property_location_district',
+                'raw_property_location_locality',
+                'raw_property_location_postalcode',
+                'raw_property_nethabitablesurface',
+                'raw_property_roomcount',
+                'raw_property_subtype',
+                'raw_property_type',
+                'raw_transaction_certificates_renovationobligation',
+                'raw_transaction_sale_cadastralincome',
+                'raw_transaction_sale_isfurnished'
+            ]
+
+            # Get column types for the specified columns
+            self.cur.execute("""
+                SELECT column_name, data_type 
+                FROM information_schema.columns 
+                WHERE table_name = 'raw_data_table' AND column_name IN %s
+            """, (tuple(columns_to_join),))
+            columns_info = self.cur.fetchall()
+            columns = ', '.join([f"{col[0]} {col[1]}" for col in columns_info])
+
+            # Create new table with the same column types
+            create_table_query = f"""
+            CREATE TABLE IF NOT EXISTS ml_data (
+                {columns}
+            );
+            """
+            self.cur.execute(create_table_query)
+
+            # Copy distinct rows from the existing table to the new table
+            query = f"INSERT INTO ml_data SELECT DISTINCT {', '.join(columns_to_join)} FROM raw_data_table"
+            self.cur.execute(query)
+            self.conn.commit()  # Commit the INSERT statement
+
+            # Fetch all rows from the new table
+            self.cur.execute("SELECT * FROM ml_data")
+            result = [dict(row) for row in self.cur.fetchall()]
+            print(f"Number of rows returned: {len(result)}")
+            if not result:
+                print(f"No data found for table ml_data")
+            return result
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            self.conn.rollback()  # Rollback the transaction in case of an error
+            return []

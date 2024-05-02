@@ -28,3 +28,5 @@ data = ml.get_data(
     ""
 )
 pprint(data)
+
+ml.join_ml_data()
