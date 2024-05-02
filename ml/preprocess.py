@@ -73,4 +73,4 @@ def preprocess_data():
 
 preprocessed_data = preprocess_data()
 pprint(preprocessed_data[0])
-ml.save_to_pre_ml_data(preprocessed_data)
+# ml.save_to_pre_ml_data(preprocessed_data)

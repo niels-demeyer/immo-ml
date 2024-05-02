@@ -1,4 +1,4 @@
-from Ml_file import Ml
+from Ml_file import ModelTrainer
 
-ml = Ml()
+ml = ModelTrainer()
 ml.train_model()

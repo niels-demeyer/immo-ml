@@ -21,6 +21,8 @@ class ModelTrainer:
         # Preprocess the data
         data = self.ml.get_data("pre_ml_data", "*")
         df = pd.DataFrame(data)
+        print(df.head())
+        print(df.info())
 
         # Define preprocessing steps
         numeric_features = df.select_dtypes(include=["int64", "float64"]).columns
@@ -67,20 +69,19 @@ class ModelTrainer:
         # Save the model
         joblib.dump(model, "model_immo.joblib")
 
-    def test_model(self, X_test, y_test):
+    def predict(self, input_data):
         # Load the model from the joblib file
-        self.model = load_joblib("model_immo.joblib")
+        self.model = load_joblib("model.joblib")
 
         if self.model is None:
             raise Exception(
                 "No model is found. You must train the model before testing it."
             )
 
-        # Predict the test data
-        y_pred = self.model.predict(X_test)
+        # Convert the input data to a DataFrame
+        input_df = pd.DataFrame([input_data])
 
-        # Evaluate the model
-        rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-        print(f"RMSE: {rmse}")
+        # Make a prediction
+        prediction = self.model.predict(input_df)
 
-        return rmse
+        return prediction[0]
