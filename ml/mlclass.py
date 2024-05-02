@@ -35,39 +35,39 @@ class MLClass:
         except Exception as e:
             print(f"An error occurred: {e}")
             return []
-        
+
     def join_ml_data(self):
         try:
             self.cur = self.conn.cursor(cursor_factory=DictCursor)
-            
+
             # Specify the columns to join
             columns_to_join = [
-                'url',
-                'raw_price_accessibilityprice',
-                'raw_property_bathroomcount',
-                'raw_property_building_condition',
-                'raw_property_building_constructionyear',
-                'raw_property_constructionpermit_floodzonetype',
-                'raw_property_energy_heatingtype',
-                'raw_property_gardensurface',
-                'raw_property_hasbasement',
-                'raw_property_hasswimmingpool',
-                'raw_property_hasterrace',
-                'raw_property_land_surface',
-                'raw_property_location_district',
-                'raw_property_location_locality',
-                'raw_property_location_postalcode',
-                'raw_property_nethabitablesurface',
-                'raw_property_roomcount',
-                'raw_property_subtype',
-                'raw_property_type',
-                'raw_transaction_certificates_renovationobligation',
-                'raw_transaction_sale_cadastralincome',
-                'raw_transaction_sale_isfurnished'
+                "url",
+                "raw_price_accessibilityprice",
+                "raw_property_bathroomcount",
+                "raw_property_building_condition",
+                "raw_property_building_constructionyear",
+                "raw_property_constructionpermit_floodzonetype",
+                "raw_property_energy_heatingtype",
+                "raw_property_gardensurface",
+                "raw_property_hasbasement",
+                "raw_property_hasswimmingpool",
+                "raw_property_hasterrace",
+                "raw_property_land_surface",
+                "raw_property_location_district",
+                "raw_property_location_locality",
+                "raw_property_location_postalcode",
+                "raw_property_nethabitablesurface",
+                "raw_property_roomcount",
+                "raw_property_subtype",
+                "raw_property_type",
+                "raw_transaction_certificates_renovationobligation",
+                "raw_transaction_sale_cadastralincome",
+                "raw_transaction_sale_isfurnished",
             ]
 
             # Create new table with all columns set to TEXT
-            columns = ', '.join([f"{col} TEXT" for col in columns_to_join])
+            columns = ", ".join([f"{col} TEXT" for col in columns_to_join])
             create_table_query = f"""
             CREATE TABLE IF NOT EXISTS ml_data (
                 {columns}
@@ -91,6 +91,7 @@ class MLClass:
             print(f"An error occurred: {e}")
             self.conn.rollback()  # Rollback the transaction in case of an error
             return []
+
     def preprocess_data(self):
         try:
             ml_data = self.get_data("ml_data", "*")
