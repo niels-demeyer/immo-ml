@@ -42,6 +42,7 @@ class MLClass:
             
             # Specify the columns to join
             columns_to_join = [
+                'url',
                 'raw_price_accessibilityprice',
                 'raw_property_bathroomcount',
                 'raw_property_building_condition',
