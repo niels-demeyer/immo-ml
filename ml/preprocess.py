@@ -3,4 +3,4 @@ from pprint import pprint
 
 ml = MLClass()
 data = ml.preprocess_data()
-pprint(data)
+pprint(data[0])
