@@ -91,3 +91,10 @@ class MLClass:
             print(f"An error occurred: {e}")
             self.conn.rollback()  # Rollback the transaction in case of an error
             return []
+    def preprocess_data(self):
+        try:
+            ml_data = self.get_data("ml_data", "*")
+            return ml_data
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return []
