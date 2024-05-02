@@ -92,10 +92,41 @@ class MLClass:
             self.conn.rollback()  # Rollback the transaction in case of an error
             return []
 
-    def preprocess_data(self):
+    def save_to_pre_ml_data(self, data):
         try:
-            ml_data = self.get_data("ml_data", "*")
-            return ml_data
+            # Create table if it doesn't exist
+            create_table_query = """
+            CREATE TABLE IF NOT EXISTS pre_ml_data (
+                url TEXT,
+                price INTEGER,
+                bathroom_count INTEGER,
+                building_condition TEXT,
+                construction_year INTEGER,
+                floodzone_type TEXT,
+                heating_type TEXT,
+                garden_surface INTEGER,
+                has_basement BOOLEAN,
+                has_swimming_pool BOOLEAN,
+                has_terrace BOOLEAN,
+                land_surface INTEGER,
+                district TEXT,
+                locality TEXT,
+                postal_code INTEGER,
+                net_habitable_surface INTEGER
+            );
+            """
+            self.cur.execute(create_table_query)
+
+            # Insert data into table
+            for row in data:
+                placeholders = ", ".join(["%s"] * len(row))
+                columns = ", ".join(row.keys())
+                values = tuple(row.values())
+                query = f"INSERT INTO pre_ml_data ({columns}) VALUES ({placeholders})"
+                self.cur.execute(query, values)
+
+            # Commit the changes
+            self.conn.commit()
         except Exception as e:
             print(f"An error occurred: {e}")
-            return []
+            self.conn.rollback()  # Rollback the transaction in case of an error
