@@ -1,4 +1,4 @@
-from mlclass import MLClass
+from ml.mlclass_file import MLClass
 from pprint import pprint
 
 ml = MLClass()

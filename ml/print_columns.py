@@ -1,9 +1,9 @@
-from mlclass import MLClass
+from ml.mlclass_file import MLClass
 from pprint import pprint
 
 ml = MLClass()
 data = ml.get_data(
-    "raw_data_table", 
+    "raw_data_table",
     "raw_property_type, "
     "raw_property_constructionpermit_floodzonetype, "
     "raw_property_location_locality, "
@@ -25,6 +25,6 @@ data = ml.get_data(
     "raw_transaction_certificates_renovationobligation,"
     "raw_property_bathroomcount, "
     "raw_transaction_sale_isfurnished"
-    ""
+    "",
 )
 pprint(data)
