@@ -16,10 +16,32 @@ import random
 class ModelTrainer:
     def __init__(self):
         self.ml = PreMl()
+        self.data = self.ml.get_data("ml_data", "*")
+
+    def clean_data(self):
+        # Handle missing values
+        # drop rows with missing price
+        self.data = self.data.dropna(subset=["price"])
+
+        # Remove duplicates
+        self.data = self.data.drop_duplicates()
+
+        # Remove the ID column
+        self.data = self.data.drop(columns=["url"])
+
+        if self.data["property_type"].any() == "APARTMENT":
+            # Remove rows with missing values in the following columns
+            self.data = self.data.drop(columns=["land_surface"])
+
+        # Remove the construction year
+        self.data = self.data.drop(columns=["construction_year"])
+
+        # Remove the property_type
+        self.data = self.data.drop(columns=["property_type"])
 
     def train_model(self):
         # Preprocess the data
-        data = self.ml.get_data("pre_ml_data", "*")
+        data = self.data
         df = pd.DataFrame(data)
         print(df.head())
         print(df.info())
