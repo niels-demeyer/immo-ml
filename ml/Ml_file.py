@@ -8,7 +8,7 @@ from xgboost import XGBRegressor
 from sklearn.metrics import mean_squared_error
 from PreMl_file import PreMl
 import pandas as pd
-from joblib import dump as joblib
+from joblib import dump
 from joblib import load as load_joblib
 import random
 
@@ -86,7 +86,11 @@ class ModelTrainer:
         model = XGBRegressor()
         model.fit(X_transformed, y)
 
-        # Return the trained model and the preprocessor for later use
+        # Save the trained model and the preprocessor for later use
+        dump(model, "immo_model.joblib")
+        dump(preprocessor, "preprocessor.joblib")
+
+        # Return the trained model and the preprocessor
         return model, preprocessor
 
     def predict(self, input_data):
