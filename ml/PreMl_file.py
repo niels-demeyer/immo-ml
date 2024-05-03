@@ -22,6 +22,7 @@ class PreMl:
             port=os.getenv("DB_PORT"),
         )
         self.cur = self.conn.cursor()
+        self.data = self.get_data("ml_data", "*")  # Fetch data from the ml_data table
 
     def close(self):
         self.cur.close()
@@ -41,6 +42,19 @@ class PreMl:
         except Exception as e:
             print(f"An error occurred: {e}")
             return []
+
+    def split_data_property_type(self, data):
+        # Convert self.data to a DataFrame
+        data = pd.DataFrame(data)
+        print(data.columns)
+        print(data.shape)
+
+        # Print out the options for the raw_property_type column
+        print(data["raw_property_subtype"].unique())
+
+        # Split into houses and apartments
+        houses = data[data["raw_property_type"] == "house"]
+        apartments = data[data["raw_property_type"] == "apartment"]
 
     def join_ml_data(self):
         try:
@@ -146,65 +160,65 @@ class PreMl:
             print(f"An error occurred: {e}")
             self.conn.rollback()  # Rollback the transaction in case of an error
 
-        def clean_data(self):
-            # Convert self.data to a DataFrame
-            data = pd.DataFrame(self.data)
+    def clean_data(self, data):
+        # Convert self.data to a DataFrame
+        data = pd.DataFrame(data)
 
-            # Print out the columns
-            print(data.columns)
+        # Print out the columns
+        print(data.columns)
 
-            # Handle missing values
-            # drop rows with missing price
-            data = data.dropna(subset=["price"])
+        # Handle missing values
+        # drop rows with missing price
+        data = data.dropna(subset=["price"])
 
-            # Remove duplicates
-            data = data.drop_duplicates()
+        # Remove duplicates
+        data = data.drop_duplicates()
 
-            # Remove the ID column
-            data = data.drop(columns=["url"])
+        # Remove the ID column
+        data = data.drop(columns=["url"])
 
-            # Remove the construction year
-            data = data.drop(columns=["construction_year"])
+        # Remove the construction year
+        data = data.drop(columns=["construction_year"])
 
-        def preprocess_data(self):
-            # Convert the data to a DataFrame
-            data = pd.DataFrame(self.data)
+    def preprocess_data(self):
+        # Convert the data to a DataFrame
+        data = pd.DataFrame(self.data)
 
-            # Separate the target variable 'price' from the features
-            X = data.drop(columns=["price"])
-            y = data["price"]
+        # Separate the target variable 'price' from the features
+        X = data.drop(columns=["price"])
+        y = data["price"]
 
-            # Define preprocessing steps
-            numeric_features = X.select_dtypes(include=["int64", "float64"]).columns
-            categorical_features = X.select_dtypes(include=["object"]).columns
-            boolean_features = X.select_dtypes(include=["bool"]).columns
+        # Define preprocessing steps
+        numeric_features = X.select_dtypes(include=["int64", "float64"]).columns
+        categorical_features = X.select_dtypes(include=["object"]).columns
+        boolean_features = X.select_dtypes(include=["bool"]).columns
 
-            # Convert boolean columns to int
-            X[boolean_features] = X[boolean_features].astype(int)
+        # Convert boolean columns to int
+        X[boolean_features] = X[boolean_features].astype(int)
 
-            numeric_transformer = make_pipeline(
-                SimpleImputer(strategy="median"), StandardScaler()
-            )
+        numeric_transformer = make_pipeline(
+            SimpleImputer(strategy="median"), StandardScaler()
+        )
 
-            categorical_transformer = make_pipeline(
-                SimpleImputer(strategy="constant", fill_value="missing"),
-                OneHotEncoder(handle_unknown="ignore"),
-            )
+        categorical_transformer = make_pipeline(
+            SimpleImputer(strategy="constant", fill_value="missing"),
+            OneHotEncoder(handle_unknown="ignore"),
+        )
 
-            boolean_transformer = SimpleImputer(strategy="most_frequent")
+        boolean_transformer = SimpleImputer(strategy="most_frequent")
 
-            preprocessor = make_column_transformer(
-                (numeric_transformer, numeric_features),
-                (categorical_transformer, categorical_features),
-                (boolean_transformer, boolean_features),
-            )
+        preprocessor = make_column_transformer(
+            (numeric_transformer, numeric_features),
+            (categorical_transformer, categorical_features),
+            (boolean_transformer, boolean_features),
+        )
 
-            # Fit and transform the features DataFrame
-            X_transformed = preprocessor.fit_transform(X)
+        # Fit and transform the features DataFrame
+        X_transformed = preprocessor.fit_transform(X)
 
-            # Split the data into training and testing sets
-            X_train, X_test, y_train, y_test = train_test_split(
-                X_transformed, y, test_size=0.2, random_state=42
-            )
+        # Split the data into training and testing sets
+        X_train, X_test, y_train, y_test = train_test_split(
+            X_transformed, y, test_size=0.2, random_state=42
+        )
 
-            return X_train, X_test, y_train, y_test
+        return X_train, X_test, y_train, y_test

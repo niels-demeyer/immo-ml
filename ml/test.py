@@ -1,5 +1,7 @@
-from Ml_file import ModelTrainer
+from PreMl_file import PreMl
 
-model = ModelTrainer()
-model.clean_data()
-print(model.data[0])
+preml = PreMl()
+
+data = preml.get_data("ml_data", "*")
+# print(data[0])
+preml.split_data_property_type(data)
