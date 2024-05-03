@@ -18,34 +18,6 @@ class ModelTrainer:
         self.ml = PreMl()
         self.data = self.ml.get_data("pre_ml_data", "*")
 
-    def clean_data(self):
-        # Convert self.data to a DataFrame
-        data = pd.DataFrame(self.data)
-
-        # Print out the columns
-        # print(data.columns)
-
-        # Handle missing values
-        # drop rows with missing price
-        data = data.dropna(subset=["price"])
-
-        # Remove duplicates
-        data = data.drop_duplicates()
-
-        # Remove the ID column
-        data = data.drop(columns=["url"])
-
-        if data["property_type"].any() == "APARTMENT":
-            # Remove rows with missing values in the following columns
-            data = data.drop(columns=["land_surface"])
-
-        # Remove the construction year
-        data = data.drop(columns=["construction_year"])
-
-        # Remove the property_type
-        data = data.drop(columns=["property_type"])
-        return data
-
     def train_model(self, data):
         # Convert the data to a DataFrame
         df = pd.DataFrame(data)

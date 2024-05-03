@@ -1,7 +1,13 @@
 from dotenv import load_dotenv
 import os
 import psycopg2
+import pandas as pd
 from psycopg2.extras import DictCursor
+from sklearn.pipeline import make_pipeline
+from sklearn.compose import make_column_transformer
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.model_selection import train_test_split
 
 load_dotenv()
 
@@ -139,3 +145,66 @@ class PreMl:
         except Exception as e:
             print(f"An error occurred: {e}")
             self.conn.rollback()  # Rollback the transaction in case of an error
+
+        def clean_data(self):
+            # Convert self.data to a DataFrame
+            data = pd.DataFrame(self.data)
+
+            # Print out the columns
+            print(data.columns)
+
+            # Handle missing values
+            # drop rows with missing price
+            data = data.dropna(subset=["price"])
+
+            # Remove duplicates
+            data = data.drop_duplicates()
+
+            # Remove the ID column
+            data = data.drop(columns=["url"])
+
+            # Remove the construction year
+            data = data.drop(columns=["construction_year"])
+
+        def preprocess_data(self):
+            # Convert the data to a DataFrame
+            data = pd.DataFrame(self.data)
+
+            # Separate the target variable 'price' from the features
+            X = data.drop(columns=["price"])
+            y = data["price"]
+
+            # Define preprocessing steps
+            numeric_features = X.select_dtypes(include=["int64", "float64"]).columns
+            categorical_features = X.select_dtypes(include=["object"]).columns
+            boolean_features = X.select_dtypes(include=["bool"]).columns
+
+            # Convert boolean columns to int
+            X[boolean_features] = X[boolean_features].astype(int)
+
+            numeric_transformer = make_pipeline(
+                SimpleImputer(strategy="median"), StandardScaler()
+            )
+
+            categorical_transformer = make_pipeline(
+                SimpleImputer(strategy="constant", fill_value="missing"),
+                OneHotEncoder(handle_unknown="ignore"),
+            )
+
+            boolean_transformer = SimpleImputer(strategy="most_frequent")
+
+            preprocessor = make_column_transformer(
+                (numeric_transformer, numeric_features),
+                (categorical_transformer, categorical_features),
+                (boolean_transformer, boolean_features),
+            )
+
+            # Fit and transform the features DataFrame
+            X_transformed = preprocessor.fit_transform(X)
+
+            # Split the data into training and testing sets
+            X_train, X_test, y_train, y_test = train_test_split(
+                X_transformed, y, test_size=0.2, random_state=42
+            )
+
+            return X_train, X_test, y_train, y_test
