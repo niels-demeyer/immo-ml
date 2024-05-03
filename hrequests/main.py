@@ -1,4 +1,4 @@
-from properties import ExtractPage
+from properties_file import ExtractPage
 from FileUtils_class import FileUtils
 import os
 from dotenv import load_dotenv
