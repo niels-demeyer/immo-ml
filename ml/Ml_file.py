@@ -9,7 +9,7 @@ from sklearn.metrics import mean_squared_error
 from PreMl_file import PreMl
 import pandas as pd
 from joblib import dump
-from joblib import load as load_joblib
+from joblib import load
 import random
 
 
@@ -95,17 +95,27 @@ class ModelTrainer:
 
     def predict(self, input_data):
         # Load the model from the joblib file
-        self.model = load_joblib("model.joblib")
+        self.model = load("immo_model.joblib")
 
         if self.model is None:
             raise Exception(
                 "No model is found. You must train the model before testing it."
             )
 
+        # Load the preprocessor
+        preprocessor = load("preprocessor.joblib")
+
         # Convert the input data to a DataFrame
         input_df = pd.DataFrame([input_data])
 
+        # Convert boolean columns to int
+        bool_cols = [col for col in input_df.columns if input_df[col].dtype == bool]
+        input_df[bool_cols] = input_df[bool_cols].astype(int)
+
+        # Preprocess the input data
+        input_df_transformed = preprocessor.transform(input_df)
+
         # Make a prediction
-        prediction = self.model.predict(input_df)
+        prediction = self.model.predict(input_df_transformed)
 
         return prediction[0]
