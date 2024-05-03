@@ -53,8 +53,8 @@ except Exception as e:
 # Loop through each unchecked URL
 for url in unchecked_urls:
     try:
-        # sleep_time = random.randint(1, 5)
-        # time.sleep(sleep_time)
+        sleep_time = random.randint(1, 5)
+        time.sleep(sleep_time)
         # Create an instance of ExtractPage with the URL
         page = ExtractPage(
             url[0]
