@@ -19,6 +19,7 @@ host = os.getenv("DB_HOST")
 
 
 class ImmowebPipeline:
+
     def open_spider(self, spider):
         if spider.name != "most_expensive":
             return
@@ -28,7 +29,8 @@ class ImmowebPipeline:
         self.cursor = self.connection.cursor()
         self.cursor.execute(
             """
-            CREATE TABLE IF NOT EXISTS most_expensive (
+            DROP TABLE IF EXISTS most_expensive;
+            CREATE TABLE most_expensive (
                 id SERIAL PRIMARY KEY,
                 url VARCHAR(255) UNIQUE,
                 typeHouse VARCHAR(255),
