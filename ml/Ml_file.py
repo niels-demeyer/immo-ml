@@ -16,40 +16,51 @@ import random
 class ModelTrainer:
     def __init__(self):
         self.ml = PreMl()
-        self.data = self.ml.get_data("ml_data", "*")
+        self.data = self.ml.get_data("pre_ml_data", "*")
 
     def clean_data(self):
+        # Convert self.data to a DataFrame
+        data = pd.DataFrame(self.data)
+
+        # Print out the columns
+        # print(data.columns)
+
         # Handle missing values
         # drop rows with missing price
-        self.data = self.data.dropna(subset=["price"])
+        data = data.dropna(subset=["price"])
 
         # Remove duplicates
-        self.data = self.data.drop_duplicates()
+        data = data.drop_duplicates()
 
         # Remove the ID column
-        self.data = self.data.drop(columns=["url"])
+        data = data.drop(columns=["url"])
 
-        if self.data["property_type"].any() == "APARTMENT":
+        if data["property_type"].any() == "APARTMENT":
             # Remove rows with missing values in the following columns
-            self.data = self.data.drop(columns=["land_surface"])
+            data = data.drop(columns=["land_surface"])
 
         # Remove the construction year
-        self.data = self.data.drop(columns=["construction_year"])
+        data = data.drop(columns=["construction_year"])
 
         # Remove the property_type
-        self.data = self.data.drop(columns=["property_type"])
+        data = data.drop(columns=["property_type"])
+        return data
 
-    def train_model(self):
-        # Preprocess the data
-        data = self.data
+    def train_model(self, data):
+        # Convert the data to a DataFrame
         df = pd.DataFrame(data)
-        print(df.head())
-        print(df.info())
+
+        # Separate the target variable 'price' from the features
+        X = df.drop(columns=["price"])
+        y = df["price"]
 
         # Define preprocessing steps
-        numeric_features = df.select_dtypes(include=["int64", "float64"]).columns
-        categorical_features = df.select_dtypes(include=["object"]).columns
-        boolean_features = df.select_dtypes(include=["bool"]).columns
+        numeric_features = X.select_dtypes(include=["int64", "float64"]).columns
+        categorical_features = X.select_dtypes(include=["object"]).columns
+        boolean_features = X.select_dtypes(include=["bool"]).columns
+
+        # Convert boolean columns to int
+        X[boolean_features] = X[boolean_features].astype(int)
 
         numeric_transformer = make_pipeline(
             SimpleImputer(strategy="median"), StandardScaler()
@@ -68,28 +79,15 @@ class ModelTrainer:
             (boolean_transformer, boolean_features),
         )
 
-        # Split the data
-        X = df.drop("price", axis=1)
-        y = df["price"]
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.2, random_state=42
-        )
+        # Fit and transform the features DataFrame
+        X_transformed = preprocessor.fit_transform(X)
 
-        # Define the model
-        model = make_pipeline(
-            preprocessor, XGBRegressor(objective="reg:squarederror", random_state=42)
-        )
+        # Train the model using XGBoost
+        model = XGBRegressor()
+        model.fit(X_transformed, y)
 
-        # Train the model
-        model.fit(X_train, y_train)
-
-        # Evaluate the model
-        y_pred = model.predict(X_test)
-        rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-        print(f"RMSE: {rmse}")
-
-        # Save the model
-        joblib.dump(model, "model_immo.joblib")
+        # Return the trained model and the preprocessor for later use
+        return model, preprocessor
 
     def predict(self, input_data):
         # Load the model from the joblib file
