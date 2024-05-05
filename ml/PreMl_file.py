@@ -70,32 +70,6 @@ class PreMl:
             "cadastral_income",
             "is_furnished",
         ]
-
-        self.clean_sql_column_types = {
-            "url": "TEXT",
-            "price": "INTEGER",
-            "bathroom_count": "INTEGER",
-            "building_condition": "TEXT",
-            "construction_year": "INTEGER",
-            "floodzone_type": "TEXT",
-            "heating_type": "TEXT",
-            "garden_surface": "INTEGER",
-            "has_basement": "BOOLEAN",
-            "has_swimming_pool": "BOOLEAN",
-            "has_terrace": "BOOLEAN",
-            "land_surface": "INTEGER",
-            "district": "TEXT",
-            "locality": "TEXT",
-            "postal_code": "INTEGER",
-            "net_habitable_surface": "INTEGER",
-            "room_count": "INTEGER",
-            "property_subtype": "TEXT",
-            "property_type": "TEXT",
-            "renovation_obligation": "BOOLEAN",
-            "cadastral_income": "INTEGER",
-            "is_furnished": "BOOLEAN",
-        }
-
         self.cur = self.conn.cursor()
         self.data = self.get_data("ml_data", "*")  # Fetch data from the ml_data table
 
