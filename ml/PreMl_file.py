@@ -103,6 +103,7 @@ class PreMl:
         # Split into houses and apartments
         houses = data[data["raw_property_type"] == "house"]
         apartments = data[data["raw_property_type"] == "apartment"]
+        return houses, apartments
 
     def clean_data(self, data):
         # Convert self.data to a DataFrame
