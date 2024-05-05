@@ -141,9 +141,31 @@ class PreMl:
         # Convert the data to a DataFrame
         data = pd.DataFrame(data=data)
 
+        # Convert columns to their appropriate types
+        numeric_cols = [
+            "bathroom_count",
+            "garden_surface",
+            "land_surface",
+            "net_habitable_surface",
+            "room_count",
+            "cadastral_income",
+        ]
+        boolean_cols = [
+            "has_basement",
+            "has_swimming_pool",
+            "has_terrace",
+            "is_furnished",
+        ]
+
+        for col in numeric_cols:
+            data[col] = pd.to_numeric(data[col], errors="coerce")
+
+        for col in boolean_cols:
+            data[col] = data[col].astype("bool")
+
         # Separate the target variable 'price' from the features
         X = data.drop(columns=["price"])
-        y = data["price"]
+        y = pd.to_numeric(data["price"], errors="coerce")
 
         # Define preprocessing steps
         numeric_features = X.select_dtypes(include=["int64", "float64"]).columns
