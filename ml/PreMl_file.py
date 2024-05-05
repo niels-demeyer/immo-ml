@@ -110,6 +110,12 @@ class PreMl:
         # Convert self.data to a DataFrame
         data = pd.DataFrame(data)
 
+        # Create a dictionary mapping raw column names to clean column names
+        column_name_mapping = dict(zip(self.raw_column_names, self.clean_column_names))
+
+        # Rename the columns
+        data = data.rename(columns=column_name_mapping)
+
         # Print out the columns
         print(data.columns)
 
@@ -126,9 +132,11 @@ class PreMl:
         # Remove the construction year
         data = data.drop(columns=["construction_year"])
 
-    def preprocess_data(self):
+        return data
+
+    def preprocess_data(self, data):
         # Convert the data to a DataFrame
-        data = pd.DataFrame(self.data)
+        data = pd.DataFrame(data=data)
 
         # Separate the target variable 'price' from the features
         X = data.drop(columns=["price"])
