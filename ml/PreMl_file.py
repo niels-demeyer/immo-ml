@@ -21,6 +21,56 @@ class PreMl:
             host=os.getenv("DB_HOST"),
             port=os.getenv("DB_PORT"),
         )
+        self.raw_column_names = [
+            "url",
+            "raw_price_accessibilityprice",
+            "raw_property_bathroomcount",
+            "raw_property_building_condition",
+            "raw_property_building_constructionyear",
+            "raw_property_constructionpermit_floodzonetype",
+            "raw_property_energy_heatingtype",
+            "raw_property_gardensurface",
+            "raw_property_hasbasement",
+            "raw_property_hasswimmingpool",
+            "raw_property_hasterrace",
+            "raw_property_land_surface",
+            "raw_property_location_district",
+            "raw_property_location_locality",
+            "raw_property_location_postalcode",
+            "raw_property_nethabitablesurface",
+            "raw_property_roomcount",
+            "raw_property_subtype",
+            "raw_property_type",
+            "raw_transaction_certificates_renovationobligation",
+            "raw_transaction_sale_cadastralincome",
+            "raw_transaction_sale_isfurnished",
+        ]
+
+        self.clean_column_names = [
+            "url",
+            "price",
+            "bathroom_count",
+            "building_condition",
+            "construction_year",
+            "floodzone_type",
+            "heating_type",
+            "garden_surface",
+            "has_basement",
+            "has_swimming_pool",
+            "has_terrace",
+            "land_surface",
+            "district",
+            "locality",
+            "postal_code",
+            "net_habitable_surface",
+            "room_count",
+            "property_subtype",
+            "property_type",
+            "renovation_obligation",
+            "cadastral_income",
+            "is_furnished",
+        ]
+
         self.cur = self.conn.cursor()
         self.data = self.get_data("ml_data", "*")  # Fetch data from the ml_data table
 
