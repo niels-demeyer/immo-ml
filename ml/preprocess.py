@@ -4,6 +4,10 @@ from pprint import pprint
 
 ml = PreMl()
 
-raw_data = ml.get_data("raw_data_table", "*")
+# Fetch data from the specified columns
+columns = ", ".join(ml.raw_column_names)
+raw_data = ml.get_data("raw_data_table", columns)
 
-houses, apartments = ml.split_data_property_type(raw_data)
+clean_data = ml.clean_data(raw_data)
+print(clean_data)
+# houses, apartments = ml.split_data_property_type(raw_data)

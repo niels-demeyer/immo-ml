@@ -22,6 +22,7 @@ class PreMl:
             host=os.getenv("DB_HOST"),
             port=os.getenv("DB_PORT"),
         )
+        self.cur = self.conn.cursor()
         self.raw_column_names = [
             "url",
             "raw_price_accessibilityprice",
@@ -71,7 +72,6 @@ class PreMl:
             "cadastral_income",
             "is_furnished",
         ]
-        self.cur = self.conn.cursor()
 
     def close(self):
         self.cur.close()
@@ -120,7 +120,7 @@ class PreMl:
         print(data.columns)
 
         # Handle missing values
-        # drop rows with missing price
+        # Drop rows with missing price
         data = data.dropna(subset=["price"])
 
         # Remove duplicates
@@ -131,6 +131,9 @@ class PreMl:
 
         # Remove the construction year
         data = data.drop(columns=["construction_year"])
+
+        # Remove empty rows
+        data = data.dropna(how="all")
 
         return data
 
