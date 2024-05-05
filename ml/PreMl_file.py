@@ -8,6 +8,7 @@ from sklearn.compose import make_column_transformer
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.model_selection import train_test_split
+import pickle
 
 load_dotenv()
 
@@ -167,3 +168,9 @@ class PreMl:
         )
 
         return X_train, X_test, y_train, y_test
+
+    def save_pre_pickle(self, data, filename):
+        # Open the file in write binary mode
+        with open(filename, "wb") as f:
+            # Dump the data into the file
+            pickle.dump(data, f)
