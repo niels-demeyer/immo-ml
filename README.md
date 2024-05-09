@@ -1,8 +1,8 @@
-# immo-ml
+# immo-ml🏡
 
 This machine learning project aims to predict house prices on the Belgian market by scraping the data from [immoweb](https://www.immoweb.be/).
 
-## environment variables
+## environment variables 🔑
 
 1. make an .env file with the following:
 
