@@ -202,8 +202,8 @@ class PreMl:
 
         return X_train, X_test, y_train, y_test
 
-    def save_pre_pickle(self, data, filename):
+    def save_pre_pickle(self, data):
         # Open the file in write binary mode
-        with open(filename, "wb") as f:
+        with open("model", "wb") as f:
             # Dump the data into the file
             pickle.dump(data, f)
