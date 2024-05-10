@@ -4,7 +4,7 @@ This machine learning project aims to predict house prices on the Belgian market
 
 ## environment variables 🔑
 
-1. make an .env file with the following:
+1. make an .env file with the following credentials for your PostgreSQL database:
 
    ```
    DB_NAME=YourDB
