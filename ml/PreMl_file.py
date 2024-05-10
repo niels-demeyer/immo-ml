@@ -72,21 +72,10 @@ class PreMl:
             "cadastral_income",
             "is_furnished",
         ]
-        self.clean_model_column_names_house = [
-            "price",
-            "bathroom_count",
-            "building_condition",
-            "heating_type",
-            "garden_surface",
-            "has_swimming_pool",
-            "has_terrace",
-            "land_surface",
-            "locality",
-            "net_habitable_surface",
-            "room_count",
-            "property_subtype",
-            "renovation_obligation",
-            "is_furnished",
+        self.clean_model_column_names_apartment = [
+            item
+            for item in self.clean_model_column_names_house
+            if item not in ["garden_surface", "has_swimming_pool", "land_surface"]
         ]
 
     def close(self):
