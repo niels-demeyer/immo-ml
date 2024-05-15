@@ -1,3 +1,11 @@
-scrapy
-python-dotenv
-psycopg2
+apache-airflow==2.9.1
+beautifulsoup4==4.12.3
+itemadapter==0.8.0
+joblib==1.4.2
+numpy==1.26.4
+pandas==2.2.2
+psycopg2==2.9.9
+python-dotenv==1.0.1
+scikit_learn==1.4.2
+selectolax==0.3.21
+xgboost==2.0.3

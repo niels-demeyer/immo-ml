@@ -42,4 +42,4 @@ Build the docker images with your environment variables:
 3. Install the requirements:
    `pip install -r requirements.txt`
 
-### run the project 🚀
+## run the project 🚀
