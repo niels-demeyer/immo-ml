@@ -55,3 +55,9 @@ You can run the project with airflow. Make sure to have the airflow scheduler an
 - immo_hrequest_dag.py: This dag will scrape the data from the individual immoweb pages and store it in your PostgreSQL database.
 
 ### machine learning 🤖
+
+You can run the machine learning model by running the following command:
+
+- `python3 ml/preprocess.py`
+- `python3 ml/train.py`
+- `python3 ml/predict.py`
