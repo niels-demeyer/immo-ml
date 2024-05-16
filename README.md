@@ -9,6 +9,9 @@ This machine learning project aims to predict house prices on the Belgian market
 - Make sure you have PostgreSQL installed on your machine. [visit this link to install](https://www.postgresql.org/docs/current/tutorial-install.html)
 - Make sure you have Python 3.8 installed on your machine. [visit this link to install](https://www.python.org/downloads/)
 - Make sure you have pip installed on your machine. [visit this link to install](https://pip.pypa.io/en/stable/installing/)
+- Make sure you have Docker installed on your machine. [visit this link to install](https://docs.docker.com/get-docker/)
+- Make sure you have Docker Compose installed on your machine. [visit this link to install](https://docs.docker.com/compose/install/)
+- Make sure you have airflow installed on your machine. [visit this link to install](https://airflow.apache.org/docs/apache-airflow/stable/start/local.html)
 
 ### installation 🚀
 
