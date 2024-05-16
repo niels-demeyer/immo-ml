@@ -46,3 +46,12 @@ Build the docker images with your environment variables:
    `pip install -r requirements.txt`
 
 ## run the project 🚀
+
+### airflow 🌬️
+
+You can run the project with airflow. Make sure to have the airflow scheduler and webserver running. You can then copy the dags in the dags folder to your airflow dags folder. The dags will run in a Docker container and scrape the data from immoweb and store it in your PostgreSQL database.
+
+- immo_most_expensive_dag.py: This dag will scrape the data from the immoweb website and store it in your PostgreSQL database.
+- immo_hrequest_dag.py: This dag will scrape the data from the individual immoweb pages and store it in your PostgreSQL database.
+
+### machine learning 🤖

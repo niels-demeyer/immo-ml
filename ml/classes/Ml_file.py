@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.model_selection import train_test_split
 from xgboost import XGBRegressor
 from sklearn.metrics import mean_squared_error
-from PreMl_file import PreMl
+from ml.classes.PreMl_file import PreMl
 import pandas as pd
 from joblib import dump
 from joblib import load

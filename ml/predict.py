@@ -1,4 +1,4 @@
-from Ml_file import ModelTrainer
+from ml.classes.Ml_file import ModelTrainer
 
 # Create an instance of ModelTrainer
 trainer = ModelTrainer()
